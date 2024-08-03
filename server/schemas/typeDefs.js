@@ -37,7 +37,7 @@ me: User
 
 }
 
-type Mutation {
+type Mutations {
 addUser(username: String, email: String, password: String): Auth
 login(email: String, password: String): Auth
 addBook(bookData: BookInput): User
