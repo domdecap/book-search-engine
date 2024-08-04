@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { signToken, createAuthError } = require('../utils/auth');
 
 const resolvers = {
     Query: {
@@ -10,11 +10,11 @@ const resolvers = {
                 return userData;
             }
 
-            throw new AuthenticationError('Not logged in');
+            throw createAuthError();
         },
     },
 
-    Mutations: {
+    Mutation: {
         addUser: async (parent, { username, email, password }) => {
             const user = await User.create({ username, email, password });
             const token = signToken(user);
@@ -24,13 +24,13 @@ const resolvers = {
             const user = await User.findOne({ email });
 
             if (!user) {
-                throw new AuthenticationError('Incorrect login');
+                throw createAuthError();
             }
 
             const correctPw = await user.isCorrectPassword(password);
 
             if (!correctPw) {
-                throw new AuthenticationError('Incorrect login');
+                throw createAuthError();
             }
 
             const token = signToken(user);
@@ -48,7 +48,7 @@ const resolvers = {
                 return updatedUser;
             }
 
-            throw new AuthenticationError('You must be logged in to do this');
+            throw createAuthError();
 
         },
 
@@ -63,7 +63,7 @@ const resolvers = {
                 return updatedUser;
             }
 
-            throw new AuthenticationError('You must be logged in to do this')
+            throw createAuthError();
         },
 
 
